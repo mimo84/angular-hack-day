@@ -1,11 +1,11 @@
-import {Component} from 'angular2/core';
-import { HTTP_PROVIDERS }    from 'angular2/http';
+import { Component } from 'angular2/core';
 import { WeatherService } from './api.service';
+import { Observable} from 'rxjs'
 
 
 @Component({
     selector: 'my-app',
-    template: `<h1>Hello {{testValue}}</h1>
+    template: `<h1>Hello {{testValue$ | async | json}}</h1>
     <hr>
     <!-- This one is not updating the model -->
     <input type="text"  [value]="yourName" placeholder="Enter name" />
@@ -17,9 +17,9 @@ import { WeatherService } from './api.service';
     ]
 })
 export class AppComponent {
-  testValue: string = '';
+  testValue$: Observable<any>;
   constructor(private weatherService: WeatherService ) {
-    this.testValue = this.weatherService.getWeather();
+    this.testValue$ = this.weatherService.getWeather();
   }
 
 
