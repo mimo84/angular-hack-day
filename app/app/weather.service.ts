@@ -10,8 +10,8 @@ export class WeatherService {
   constructor(private http: Http) {
 
   }
-  getWeather() {
-    var result =  this.http.get('http://hackdayapi.azurewebsites.net/api/weather/city/Brisbane')
+  getWeather(city: string) {
+    var result =  this.http.get('http://hackdayapi.azurewebsites.net/api/weather/city/' + city)
       .map(k => k.json());
 
       return result;
