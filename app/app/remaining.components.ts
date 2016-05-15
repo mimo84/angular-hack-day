@@ -1,8 +1,8 @@
 import { Component } from 'angular2/core';
 
 @Component({
-  selector: 'colors-component',
-  template: `MAurizio`
+  selector: 'remaining',
+  template: `<div>Remaining: {{ remaining }} of {{ all }}</div>`
 })
 export class ColorsComponent {
   color: string

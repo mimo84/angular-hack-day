@@ -1,8 +1,7 @@
 import { Component } from 'angular2/core';
 import { WeatherService } from './weather.service';
-import {ToDoComponent} from './todo.component';
 import { Todo } from './todo';
-import { Observable} from 'rxjs'
+
 
 
 @Component({
@@ -12,48 +11,55 @@ import { Observable} from 'rxjs'
 
     <input type="text" [(ngModel)]="newCity"/>
     <button (click)="getWeather(newCity)">Add City</button>
-    <ul><li *ngFor="#w$ of currentWeathers"><input type="checkbox"/> Hello {{ w$ | async | json}}<li></ul>
+    <div>Remaining: {{ remaining }} of {{ all }}</div>
+    <button (click)="addTodo()">A Button</button>
+    <ul>
+      <li *ngFor="#w of currentWeathers; #idx = index ">
+        <input type="checkbox" checked={{w.done}} [(ngModel)]="w.done"/> Weather in {{ w.city }} is {{ w.weather | async | json }}
+        <button (click)="removeCity(idx)">Remove city</button>
+      </li>
+    </ul>
     `,
     providers: [
       WeatherService
     ],
     directives: [
-      ToDoComponent
+      // ToDoComponent
     ]
 })
 export class AppComponent {
-  currentWeathers: Observable<any>[] = [];
-  city: string = 'Brisbane';
-  newCity: string;
 
-  weathers: Todo[] = [
-    {
-      city: 'Brisbane',
-      done: false
-    },
-    {
-      city: 'Melbourne',
-      done: false
-    }
-  ];
+  task: string = '';
+
+
+  newCity: string;
+  availableCities: string[] = ['Winterfell','San Francisco','Los Angeles','Washington, D.C.','Chicago','Sydney','Brisbane','Melbourne','Leuven','Stockholm','Dresden','Dublin','Singapore','Quebec City','Madrid','Sicily','Edinburgh','Amsterdam','Cape Town','Shanghai','Tokyo','Jerusalem','London','Rome','Paris','New York']
+
+  currentWeathers: Todo[] = [];
 
   constructor(private weatherService: WeatherService ) {
-    this.getWeather(this.city)
+    this.availableCities.forEach(c => this.getWeather(c))
   }
 
-  addCity() {
-    this.weathers.push({
-      city: this.city,
-      done: false
-    })
+  removeCity(idx) {
+    this.currentWeathers.splice(idx, 1);
   }
+
+  get remaining() {
+    return this.currentWeathers.reduce((count: number, todo: Todo) => count + + !todo.done, 0)
+  }
+
+  get all() {
+    return this.currentWeathers.reduce((count: number, todo: Todo) => count + 1, 0)
+  }
+
   getWeather(city) {
-
-    this.currentWeathers.push(this.weatherService.getWeather(city))
+    this.currentWeathers.push(
+      {
+        city: city,
+        weather: this.weatherService.getWeather(city),
+        done: false
+      });
   }
-
-
-
-
 
 }

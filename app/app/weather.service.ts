@@ -11,9 +11,7 @@ export class WeatherService {
 
   }
   getWeather(city: string) {
-    var result =  this.http.get('http://hackdayapi.azurewebsites.net/api/weather/city/' + city)
+    return this.http.get('http://hackdayapi.azurewebsites.net/api/weather/city/' + city)
       .map(k => k.json());
-
-      return result;
   }
 }
